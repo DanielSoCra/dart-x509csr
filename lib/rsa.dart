@@ -108,11 +108,11 @@ ASN1Object makeRSACSR(
   blockProtocol.add(ASN1Null());
 
   print(hex.encode(blockDN.encodedBytes));
-
+  print(hex.encode(encodedDN.encodedBytes));
 
   ASN1Sequence outer = ASN1Sequence();
   outer.add(blockDN);
   outer.add(blockProtocol);
-  outer.add(ASN1BitString(rsaSign(encodedDN.encodedBytes, privateKey)));
+  outer.add(ASN1BitString(rsaSign(blockDN.encodedBytes, privateKey)));
   return outer;
 }

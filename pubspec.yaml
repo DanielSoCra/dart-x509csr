@@ -10,6 +10,7 @@ environment:
 dependencies:
   asn1lib: ^0.5.15
   pointycastle: 1.0.2
+  basic_utils: any
 
 dev_dependencies:
   pedantic: ^1.0.0

@@ -23,6 +23,7 @@ import 'package:x509csr/x509csr.dart';
 
 import "package:pointycastle/export.dart";
 import 'package:asn1lib/asn1lib.dart';
+import 'package:convert/convert.dart';
 
 ASN1Object _encodeDN(Map<String, String> d) {
   var DN = ASN1Sequence();
@@ -101,15 +102,17 @@ ASN1Object makeRSACSR(
   blockDN.add(ASN1Integer(BigInt.from(0)));
   blockDN.add(encodedDN);
   blockDN.add(_makePublicKeyBlock(publicKey));
-  blockDN.add(ASN1Null(tag: 0xA0)); // let's call this WTF
 
   ASN1Sequence blockProtocol = ASN1Sequence();
   blockProtocol.add(ASN1ObjectIdentifier.fromName("sha256WithRSAEncryption"));
   blockProtocol.add(ASN1Null());
 
+  print(hex.encode(blockDN.encodedBytes));
+
+
   ASN1Sequence outer = ASN1Sequence();
   outer.add(blockDN);
   outer.add(blockProtocol);
-  outer.add(ASN1BitString(rsaSign(blockDN.contentBytes(), privateKey)));
+  outer.add(ASN1BitString(rsaSign(encodedDN.encodedBytes, privateKey)));
   return outer;
 }
